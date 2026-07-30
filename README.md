@@ -1,33 +1,59 @@
-# Smart Messaging Assistant — Meta Webhook
+# Rogue Bachata Smart Messaging Assistant
 
-Instagram / Facebook Messenger webhook for Meta Developer apps.
+Instagram DM assistant for Rogue Bachata — FAQ replies, unreplied inbox, offer drafts, Telegram approval, midday plan.
 
-## Secrets: where they go
+## Important Instagram rule (non-negotiable)
 
-| Secret | Put it here | Never put it here |
-|---|---|---|
-| `META_VERIFY_TOKEN` | **Vercel → Settings → Environment Variables** | GitHub, chat, committed `.env` |
-| `META_APP_SECRET` | **Vercel Environment Variables** | GitHub / committed files |
-| Access tokens (later) | **Vercel Environment Variables** | GitHub / committed files |
+Meta **does not allow** cold DMs to followers who never messaged you.
+This app only messages people who already started a conversation (24h window, or human-approved follow-ups within policy).
 
-## Fix 404 on Production
+What you *can* do:
+- See who messaged and still needs a reply
+- Draft FAQ / offer / emergency messages with first name when available
+- Approve in Telegram / Cursor, then send with rate limits
+- Get a midday plan on Telegram every day at 12:00 UTC
 
-Vercel Production must deploy a branch that contains this code (not empty `main`).
+## Live URLs
 
-1. Merge PR into `main`, **or** in Vercel → Settings → Git → Production Branch set to `cursor/instagram-webhook-bb04`
-2. Redeploy Production
-3. Open `https://YOUR_DOMAIN/health` — must return JSON, not 404
+- Health: `https://smartmessagingassistant.vercel.app/health`
+- Meta webhook: `https://smartmessagingassistant.vercel.app/webhook`
+- Who unreplied: `GET /assistant/unreplied`
+- Draft messages: `POST /assistant/draft`
+- Approve & send: `POST /assistant/approve`
+- Midday cron: `GET /api/cron/midday`
 
-## Callback URL
+## Secrets (Vercel only — never GitHub)
 
-```
-https://YOUR_DOMAIN/webhook
-```
+| Variable | Purpose |
+|---|---|
+| `META_VERIFY_TOKEN` | Webhook verify |
+| `META_APP_SECRET` | Signature check |
+| `META_PAGE_ACCESS_TOKEN` | Send / read conversations |
+| `INSTAGRAM_BUSINESS_ACCOUNT_ID` | Your IG pro account id |
+| `ASSISTANT_API_KEY` | Cursor/Claude command auth |
+| `TELEGRAM_BOT_TOKEN` | Bot from @BotFather |
+| `TELEGRAM_CHAT_ID` | Your approval group |
+| `CRON_SECRET` | Protect midday job |
 
-## Local run
+## Cursor / Claude examples
 
-```bash
-cp .env.example .env
-npm install
-npm start
-```
+After secrets are set, ask:
+
+- “Who have we not responded to?”
+- “Draft replies for unreplied people using FAQs”
+- “Draft Wednesday offer messages for people who wrote us in the last 24 hours”
+- “Send an emergency notice to recent contacts: [text]”
+- “Approve and send the pending drafts”
+
+## Telegram setup (simple)
+
+1. Message `@BotFather` → create a bot → copy token → `TELEGRAM_BOT_TOKEN`
+2. Create a private Telegram group, add the bot
+3. Get the group chat id → `TELEGRAM_CHAT_ID`
+4. Redeploy Vercel
+
+Midday cron drafts a plan and sends it to that group. Nothing sends to Instagram until you approve.
+
+## Knowledge source
+
+FAQs/offers live in `knowledge/rogue-bachata.json` (imported from `test-rogue-plan` / roguebachata.com).

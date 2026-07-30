@@ -1,18 +1,15 @@
 const { getConfig } = require('../src/lib/config');
 const { isValidSignature } = require('../src/middleware/verifySignature');
-const { handleWebhookPayload } = require('../src/handlers/messages');
+const { extractIncomingMessages } = require('../src/handlers/messages');
+const { handleInboundMessage } = require('../src/assistant/service');
+const { sendTelegramMessage } = require('../src/telegram/notify');
 
-// Keep raw body available for Meta X-Hub-Signature-256 checks
 module.exports.config = {
   api: {
     bodyParser: false,
   },
 };
 
-/**
- * @param {import('http').IncomingMessage} req
- * @returns {Promise<Buffer>}
- */
 function readRawBody(req) {
   return new Promise((resolve, reject) => {
     const chunks = [];
@@ -39,10 +36,6 @@ module.exports = async function handler(req, res) {
       return;
     }
 
-    console.warn('[webhook] Verification failed', {
-      mode,
-      tokenMatch: Boolean(verifyToken && token === verifyToken),
-    });
     res.statusCode = 403;
     res.end('Forbidden');
     return;
@@ -53,7 +46,6 @@ module.exports = async function handler(req, res) {
     try {
       rawBody = await readRawBody(req);
     } catch (err) {
-      console.error('[webhook] Failed to read body:', err);
       res.statusCode = 400;
       res.end('Bad Request');
       return;
@@ -63,7 +55,6 @@ module.exports = async function handler(req, res) {
       req.headers['x-hub-signature-256'] || req.headers['X-Hub-Signature-256'];
 
     if (!isValidSignature(rawBody, signature, appSecret)) {
-      console.warn('[webhook] Invalid signature');
       res.statusCode = 401;
       res.end('Unauthorized');
       return;
@@ -73,21 +64,29 @@ module.exports = async function handler(req, res) {
     if (rawBody.length > 0) {
       try {
         body = JSON.parse(rawBody.toString('utf8'));
-      } catch (err) {
-        console.error('[webhook] Invalid JSON:', err);
+      } catch (_err) {
         res.statusCode = 400;
         res.end('Invalid JSON');
         return;
       }
     }
 
-    // Acknowledge immediately so Meta does not retry
     res.statusCode = 200;
     res.setHeader('Content-Type', 'text/plain');
     res.end('EVENT_RECEIVED');
 
     try {
-      await handleWebhookPayload(body);
+      const messages = extractIncomingMessages(body);
+      for (const msg of messages) {
+        const result = await handleInboundMessage(msg);
+        const faqLine = result.faqSuggestion
+          ? `\nSuggested FAQ reply (${result.faqSuggestion.faqId}): ${result.faqSuggestion.draftReply}`
+          : '\nNo FAQ match — needs a human draft.';
+
+        await sendTelegramMessage(
+          `📩 New Instagram DM from ${msg.senderId}\n"${msg.text || '(no text)'}"${faqLine}`
+        );
+      }
     } catch (err) {
       console.error('[webhook] Failed to process payload:', err);
     }

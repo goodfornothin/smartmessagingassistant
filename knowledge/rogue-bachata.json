@@ -1,0 +1,106 @@
+{
+  "brand": "Rogue Bachata",
+  "instagram": "https://www.instagram.com/roguebachata/",
+  "website": "https://roguebachata.com",
+  "contactEmail": "voice@oscarcastellino.com",
+  "tone": "Warm, clear, welcoming, London bachata community. Short DM-friendly replies. Never pushy.",
+  "faqs": [
+    {
+      "id": "partner-experience",
+      "questions": ["partner", "experience", "beginner", "first time", "solo", "alone"],
+      "answer": "No partner and no experience needed. We rotate partners in class, and beginners are welcome every week."
+    },
+    {
+      "id": "what-to-wear",
+      "questions": ["wear", "clothes", "shoes", "trainers", "outfit"],
+      "answer": "Wear comfortable clothes you can move in, and flat or low-heeled shoes with a smooth sole if possible. No special dance shoes needed to start."
+    },
+    {
+      "id": "class-format",
+      "questions": ["what happens", "class like", "structure", "lesson"],
+      "answer": "We start with fundamentals — connection, basic steps and movement — then build listening and lead-follow connection, not just memorising a routine."
+    },
+    {
+      "id": "schedule",
+      "questions": ["when", "where", "schedule", "tuesday", "wednesday", "clapham", "king's cross", "kings cross", "cafe sol", "keystone"],
+      "answer": "Tuesdays at Cafe Sol, 56 Clapham High Street (SW4 7UL): class 7:30–8:30pm, free social from 8:30pm. Wednesdays at Keystone Crescent, King's Cross (N1 9DX): class 7:30pm, free social from 8:30pm."
+    },
+    {
+      "id": "pricing",
+      "questions": ["cost", "price", "how much", "£", "pound", "fee", "ticket"],
+      "answer": "Class is £10 on both Tuesday and Wednesday. The social dancing after class is free."
+    },
+    {
+      "id": "booking",
+      "questions": ["book", "booking", "reserve", "ticket", "fatsoma"],
+      "answer": "Wednesdays at King's Cross can be booked on Fatsoma (link on our site). Tuesdays at Cafe Sol don't need advance booking. Message us if you want us to confirm."
+    },
+    {
+      "id": "resonance",
+      "questions": ["resonance", "workshop", "advanced", "technique"],
+      "answer": "Rogue Resonance is our advanced workshop series with Oscar — groundedness, flow and authentic connection beyond the weekly class."
+    },
+    {
+      "id": "private",
+      "questions": ["private", "1-1", "one to one", "couples", "in-home", "home"],
+      "answer": "Yes — private and small-group sessions are available, including in-home couples sessions. Email voice@oscarcastellino.com or reply here and we'll arrange it."
+    },
+    {
+      "id": "teacher-path",
+      "questions": ["teach", "teacher", "training", "assist"],
+      "answer": "Teacher training sits inside Rogue Resonance workshops. From there, some dancers assist at classes and eventually teach."
+    },
+    {
+      "id": "experienced",
+      "questions": ["experienced", "advanced dancer", "already dance"],
+      "answer": "Yes — experienced dancers are welcome. Dropping into open beginner classes is great practice too; leading/following beginners well is an advanced skill."
+    },
+    {
+      "id": "philosophy",
+      "questions": ["rogue", "philosophy", "style", "what is rogue"],
+      "answer": "Rogue is principles over constraints — arrive as yourself and build the dance from real listening and connection, not a fixed set of steps to perform."
+    }
+  ],
+  "offers": [
+    {
+      "id": "tuesdays",
+      "name": "Rogue Tuesdays @ Cafe Sol",
+      "summary": "Every Tuesday in Clapham: £10 class 7:30–8:30pm, free social from 8:30pm. No partner needed.",
+      "cta": "Come say hi this Tuesday at Cafe Sol — we'd love to dance with you.",
+      "link": "https://roguebachata.com/cafe-sol-event.html"
+    },
+    {
+      "id": "wednesdays",
+      "name": "Rogue Bachata Wednesdays @ King's Cross",
+      "summary": "Every Wednesday at Keystone Crescent: £10 class 7:30pm, free social from 8:30pm. Beginners welcome.",
+      "cta": "Join us Wednesday at King's Cross — book via Fatsoma or just message us.",
+      "link": "https://www.fatsoma.com/e/a4rbtiyp/rogue-bachata-wednesdays-keystone-crescent"
+    },
+    {
+      "id": "resonance",
+      "name": "Rogue Resonance Workshops",
+      "summary": "Advanced technique & artistry with Oscar — groundedness, flow, authentic connection.",
+      "cta": "If you want to go deeper on technique, Rogue Resonance is made for that.",
+      "link": "https://roguebachata.com/rogue-resonance.html"
+    },
+    {
+      "id": "couples",
+      "name": "Couples Sensual Dance (private)",
+      "summary": "In-home private sessions for couples who want deeper connection through partner dance.",
+      "cta": "Happy to arrange a private couples session — reply and we'll sort a time.",
+      "link": "https://roguebachata.com/sensual-couples.html"
+    }
+  ],
+  "messageTemplates": {
+    "unrepliedFollowUp": "Hi{{namePart}} — thanks for your message. {{body}}",
+    "offerSoft": "Hi{{namePart}} — hope you're well. Quick note from Rogue Bachata: {{offer}}. {{cta}} {{link}}",
+    "emergency": "Hi{{namePart}} — important update from Rogue Bachata: {{body}}"
+  },
+  "limits": {
+    "maxAutoRepliesPerHour": 200,
+    "maxBatchSend": 50,
+    "minSecondsBetweenSends": 20,
+    "standardReplyWindowHours": 24,
+    "humanAgentWindowDays": 7
+  }
+}

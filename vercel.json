@@ -2,6 +2,16 @@
   "rewrites": [
     { "source": "/webhook", "destination": "/api/webhook" },
     { "source": "/health", "destination": "/api/health" },
+    { "source": "/assistant/unreplied", "destination": "/api/assistant/unreplied" },
+    { "source": "/assistant/draft", "destination": "/api/assistant/draft" },
+    { "source": "/assistant/approve", "destination": "/api/assistant/approve" },
+    { "source": "/cron/midday", "destination": "/api/cron/midday" },
     { "source": "/", "destination": "/api" }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/midday",
+      "schedule": "0 12 * * *"
+    }
   ]
 }
