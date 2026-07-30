@@ -2,48 +2,50 @@
 
 Instagram / Facebook Messenger webhook for Meta Developer apps.
 
-## Callback URL
+## Secrets: where they go
 
-After the server is publicly reachable over HTTPS:
+| Secret | Put it here | Never put it here |
+|---|---|---|
+| `META_VERIFY_TOKEN` | **Vercel → Project → Settings → Environment Variables** | GitHub, chat, screenshots, committed `.env` |
+| `META_APP_SECRET` | **Vercel Environment Variables** | GitHub / committed files |
+| `META_PAGE_ACCESS_TOKEN` (later) | **Vercel Environment Variables** | GitHub / committed files |
 
-```
-https://YOUR_PUBLIC_HOST/webhook
-```
+- `.env` is for **local only** and is gitignored.
+- `.env.example` has placeholder names only — safe to commit.
+- GitHub secrets are **not** needed for this webhook unless you add CI that deploys with them.
 
-Use that value in Meta Developer → App → Webhooks → Callback URL.
+## Deploy on Vercel (exact path)
 
-## Required Meta configuration
+1. Push this branch / merge to `main`.
+2. Go to [vercel.com](https://vercel.com) → **Add New… → Project** → import `smartmessagingassistant`.
+3. Framework Preset: **Other**. Leave build/output defaults.
+4. **Before** first deploy, open **Environment Variables** and add:
 
-Set these in `.env` (copy from `.env.example`):
+   - `META_VERIFY_TOKEN` = a long random string you invent (same value you will paste into Meta)
+   - `META_APP_SECRET` = from Meta Developer → App settings → Basic → App Secret
 
-| Variable | Where to get it |
-|---|---|
-| `META_VERIFY_TOKEN` | Any secret string you choose — must match the Verify Token field in Meta webhooks |
-| `META_APP_SECRET` | Meta Developer → App settings → Basic → App Secret |
-| `META_PAGE_ACCESS_TOKEN` | (Optional for receive-only) token for sending replies later |
+   Apply to **Production** (and Preview if you want).
 
-In the Meta app, subscribe the Instagram (or Page) webhook to at least:
+5. Deploy. Your URLs will look like:
+   - App: `https://YOUR_PROJECT.vercel.app`
+   - **Callback URL:** `https://YOUR_PROJECT.vercel.app/webhook`
+   - Health: `https://YOUR_PROJECT.vercel.app/health`
 
-- `messages`
-- `messaging_postbacks` (optional)
-- `message_reactions` (optional)
+## Wire Meta webhooks
+
+1. [developers.facebook.com](https://developers.facebook.com) → your app.
+2. Add **Webhooks** (or open Instagram / Messenger product → Webhooks).
+3. Callback URL: `https://YOUR_PROJECT.vercel.app/webhook`
+4. Verify token: **exactly** the same as `META_VERIFY_TOKEN` in Vercel.
+5. Verify and save.
+6. Subscribe to field **`messages`** (and others only if you need them).
+7. Make sure your Instagram professional account / Facebook Page is connected to the app.
 
 ## Local run
 
 ```bash
 cp .env.example .env
-# edit META_VERIFY_TOKEN and META_APP_SECRET
+# set META_VERIFY_TOKEN and META_APP_SECRET
 npm install
 npm start
 ```
-
-Health check: `GET /health`  
-Webhook: `GET|POST /webhook`
-
-## Verify handshake
-
-Meta sends:
-
-`GET /webhook?hub.mode=subscribe&hub.verify_token=YOUR_TOKEN&hub.challenge=123`
-
-This server returns `123` with HTTP 200 when the token matches.
